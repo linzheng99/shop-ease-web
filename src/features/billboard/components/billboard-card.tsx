@@ -64,7 +64,7 @@ export default function BillboardCard({ billboard }: BillboardCardProps) {
       <CardContent>
         <div className="relative h-[300px] w-full rounded-md overflow-hidden">
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/${billboard.image.url}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${billboard.image.url}`}
             alt={billboard.label}
             fill
             className="object-cover rounded-md"

@@ -15,7 +15,7 @@ const ProductPreview = React.memo(({ images }: ProductPreviewProps) => {
           {images?.map((image) => (
             <Tab key={image.id} className="relative flex aspect-square h-full w-full cursor-pointer items-center justify-center rounded-md bg-white text-sm transition-all hover:opacity-75 data-[selected]:ring-2 data-[selected]:ring-offset-2 data-[selected]:ring-black focus:outline-none">
               <Image
-                src={`${process.env.NEXT_PUBLIC_API_URL}/${image.url}`}
+                src={`${process.env.NEXT_PUBLIC_API_URL}${image.url}`}
                 alt={image.url}
                 fill
                 className="object-cover rounded-md"
@@ -30,7 +30,7 @@ const ProductPreview = React.memo(({ images }: ProductPreviewProps) => {
           <TabPanel key={image.id}>
             <div className='aspect-square relative h-full w-full sm:rounded-lg overflow-hidden'>
               <Image
-                src={`${process.env.NEXT_PUBLIC_API_URL}/${image.url}`}
+                src={`${process.env.NEXT_PUBLIC_API_URL}${image.url}`}
                 alt={image.url}
                 fill
                 className="object-cover rounded-md"

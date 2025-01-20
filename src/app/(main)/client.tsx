@@ -36,7 +36,7 @@ export default function Client() {
                 {store.billboards?.length && store.billboards?.length > 0 ? (
                   <div className='relative w-full min-h-[300px]'>
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/${store.billboards?.[0]?.image.url}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${store.billboards?.[0]?.image.url}`}
                       alt={store.name} fill className='rounded-md aspect-square'
                       unoptimized
                     />

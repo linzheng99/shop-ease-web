@@ -24,7 +24,7 @@ export default function ProductInfo({ product, className, onClick }: ProductInfo
       {imageUrl ? (
         <div className="aspect-square rounded-md overflow-hidden relative">
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/${imageUrl}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`}
             alt={name}
             fill
             className="object-cover aspect-square rounded-md"

@@ -72,7 +72,7 @@ export default function UploadImages({ className, onChange, defaultValue }: Uplo
           value.map((image) => (
             <div className='flex items-center justify-center rounded-md relative group/image h-[180px]' key={image.id}>
               <Image
-                src={`${process.env.NEXT_PUBLIC_API_URL}/${image.url}`}
+                src={`${process.env.NEXT_PUBLIC_API_URL}${image.url}`}
                 alt="image"
                 fill
                 className='rounded-md object-cover'

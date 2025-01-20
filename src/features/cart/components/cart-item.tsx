@@ -54,7 +54,7 @@ export default function CartItem({ data }: { data: CartItemWithVariant }) {
         <div className="relative h-24 w-24 rounded-md md:h-48 md:w-48">
           {images[0]?.url && (
             <Image
-              src={`${process.env.NEXT_PUBLIC_API_URL}/${images[0]?.url}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}${images[0]?.url}`}
               alt={name}
               className="object-cover object-center rounded-md"
               fill

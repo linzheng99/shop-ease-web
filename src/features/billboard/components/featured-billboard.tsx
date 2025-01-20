@@ -13,7 +13,7 @@ export function FeaturedBillboard({ billboards }: FeaturedBillboardProps) {
       {featuredBillboard ? (
         <>
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/${featuredBillboard.image.url}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${featuredBillboard.image.url}`}
             alt={featuredBillboard.label}
             fill
             className="rounded-xl aspect-square md:aspect-[2.4/1]"
