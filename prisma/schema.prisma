@@ -1,0 +1,226 @@
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  BUSINESS
+  USER
+  VISITOR
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  name               String
+  email              String    @unique
+  password           String
+  hashedRefreshToken String?
+  role               Role      @default(USER)
+  cart               Cart?
+  stores             Store[]
+  orders             Order[]
+  comments           Comment[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Store {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  products    Product[]
+  billboards  Billboard[]
+  orders      Order[]
+  categories  Category[]
+  sizes       Size[]
+  colors      Color[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([userId])
+}
+
+model Product {
+  id              String           @id @default(cuid())
+  name            String
+  description     String
+  price           Float
+  storeId         String
+  store           Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  categoryId      String
+  category        Category         @relation(fields: [categoryId], references: [id])
+  productVariants ProductVariant[]
+  images          Image[]
+  comments        Comment[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id         String      @id @default(cuid())
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sizeId     String?
+  size       Size?       @relation(fields: [sizeId], references: [id])
+  colorId    String?
+  color      Color?      @relation(fields: [colorId], references: [id])
+  quantity   Int
+  orderItems OrderItem[]
+  cartItems  CartItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([productId])
+  @@index([sizeId])
+  @@index([colorId])
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  products  Product[]
+  storeId   String
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+model Billboard {
+  id         String   @id @default(cuid())
+  label      String
+  imageId    String   @unique
+  image      Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  storeId    String
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  isFeatured Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Image {
+  id        String     @id @default(cuid())
+  url       String
+  name      String
+  productId String?
+  product   Product?   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  billboard Billboard?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  rating    Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([userId])
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id])
+  storeId    String
+  store      Store       @relation(fields: [storeId], references: [id])
+  status     OrderStatus @default(PENDING)
+  expiresAt  DateTime
+  paymentUrl String?     @db.VarChar(2048)
+  totalPrice Float
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([storeId])
+}
+
+model OrderItem {
+  id               String          @id @default(cuid())
+  orderId          String
+  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  quantity         Int
+  price            Float
+  totalPrice       Float
+  productName      String
+  variantSize      String?
+  variantColor     String?
+  colorValue       String?
+  productVariantId String?
+  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([orderId])
+  @@index([productVariantId])
+}
+
+model Size {
+  id              String           @id @default(cuid())
+  name            String
+  storeId         String
+  store           Store            @relation(fields: [storeId], references: [id])
+  productVariants ProductVariant[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Color {
+  id              String           @id @default(cuid())
+  name            String
+  value           String
+  storeId         String
+  store           Store            @relation(fields: [storeId], references: [id])
+  productVariants ProductVariant[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+model CartItem {
+  id               String         @id @default(cuid())
+  cartId           String
+  cart             Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  quantity         Int
+  productVariantId String         @unique
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([cartId])
+  @@index([productVariantId])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
