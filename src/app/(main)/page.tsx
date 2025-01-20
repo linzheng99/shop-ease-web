@@ -21,7 +21,7 @@ export default function DashboardPage() {
         </p>
       </div>
       <Client />
-      <footer className="w-full flex justify-center items-center fixed bottom-0 pb-4">
+      <footer className="w-full flex justify-start items-center fixed bottom-0 pb-4">
         <p className="text-gray-500 text-sm">
           Copyright © 2025 Astro Ecommerce by <Link href="https://github.com/linzheng99" target="_blank" className="text-primary hover:underline">Lin Zheng</Link>
         </p>
